@@ -11,7 +11,7 @@
   Using this module:
 
   -- local require for module
-  local test_runner = require('luvit-test-runner')
+  local test_runner = require('test-runner')
 
   ... setup some prerequisites or add functions that be called for each test ...
 
@@ -22,9 +22,9 @@
   end)
 
   -- run all tests that have been added
-  test_runner:run()
-  -- if we get this far we can print our success banner
-  print("test-runner: all tests pass")
+  -- supply a success banner string on success to be displayed
+  test_runner:run("test-runner: all tests pass")
+ 
 ]]
 
 local tests_to_run = {}
@@ -34,10 +34,12 @@ test_runner.add_test = function(self, name, test)
   tests_to_run[#tests_to_run + 1] = {name, function() test(name) end}
 end
 
-test_runner.run = function(self)
+test_runner.run = function(self, success_message)
   table.foreach(tests_to_run, function(i,v) 
     v[2]()
+    io.write(".")
   end)
+  io.write(" ("..#tests_to_run..") tests run  "..success_message.."\n")
 end
 
 return test_runner
